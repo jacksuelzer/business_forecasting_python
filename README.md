@@ -12,7 +12,7 @@ In this project, I examined 16 annoynmized properties for a major hotel chain. T
    1. **Error trend seasonality**, where I examined the use of `AutoETS`;
    1. **Statistical models**, `AutoARIMA`;
    1. **Machine Learning models**, `LightGBM`;
-   1. **Deep Learning models**,  ; 
+   1. **Deep Learning models**, `AutoNHITS` and `AutoNBEATS`  ; 
    1. **Transformer models**, `TimeGPT`.
 
 ## Python Notebook
@@ -20,4 +20,30 @@ The Python Notebook containing my code, results, and insights is available at: [
 
 ## Business Insights
 
-TBD.
+This project implements a comprehensive comparative study of state-of-the-art time series forecasting models, addressing the critical need for accurate planning in a highly dynamic business environment. The goal is to benchmark advanced techniques—including Deep Learning, Statistical, and classical Machine Learning—against each other to identify the optimal model for predicting future demand (or other key metric) and optimizing resource allocation or inventory holding costs.
+
+Based on a rigorous cross-validation and evaluation using metrics such as Mean Absolute Error (MAE) and Root Mean Square Error (RMSE), the following insights guide the recommendation for production deployment:
+
+1. Advanced Deep Learning is the Recommended Solution
+Recommendation: Models like TimeGPT, NHITS, and NBEATS (Deep Learning) consistently delivered the lowest forecast errors and demonstrated superior ability to handle complex seasonality, trends, and regime shifts present in the data.
+
+Actionable Impact: Deploying the leading model, TimeGPT, directly translating to more accurate ordering, less excess inventory, and improved operational efficiency.
+
+2. Statistical Models as a High-Reliability Fallback
+Finding: Traditional models, specifically AutoETS and AutoARIMA, offer robust, transparent, and interpretable forecasts. They provide solid performance and often come close to the accuracy of deep learning methods on series with clear underlying patterns.
+
+Use Case: These models are excellent candidates for a low-latency deployment layer or as a reliable fallback mechanism in production, ensuring the business always has a stable forecast, even in a system failure scenario.
+
+3. The Feature Engineering Challenge for ML Models
+Observation: The LightGBM model's performance was significantly hindered when only basic date features were used. Its results lagged behind both the deep learning and well-tuned statistical models.
+
+Strategic Direction: For future improvements using tree-based methods, the business must prioritize investing in collecting and integrating external data (e.g., promotional calendars, macroeconomic data, competitor pricing) to create the necessary predictive features that drive Machine Learning model performance.
+
+To make a Machine Learning model competitive in this domain, it is essential to incorporate richer exogenous variables (e.g., external economic indicators, marketing spend, holiday/event flags). This underscores that success with tree-based models relies heavily on domain expertise and creating predictive features.
+
+
+
+
+
+
+
