@@ -42,6 +42,27 @@ Strategic Direction: For future improvements using tree-based methods, the busin
 To make a Machine Learning model competitive in this domain, it is essential to incorporate richer exogenous variables (e.g., external economic indicators, marketing spend, holiday/event flags). This underscores that success with tree-based models relies heavily on domain expertise and creating predictive features.
 
 
+Key Packages Used:
+
+pandas
+
+numpy
+
+matplotlib / seaborn / plotly
+
+statsmodels (for statistical models)
+
+neuralforecast / lightgbm (for Deep Learning and ML models)
+
+## Future Work and Next Steps
+The following steps are recommended to transition this proof-of-concept into a production-ready forecasting system:
+
+Error Analysis and Explainability: Conduct a deep dive into the specific time series where even the best models performed poorly to understand the underlying drivers (e.g., outliers, unmodeled events).
+
+Uncertainty Quantification: Implement prediction intervals (e.g., 80% and 95% confidence intervals) to provide the business with a clear range of outcomes, enabling better risk-aware decision-making.
+
+Cloud Deployment: Containerize the final model using Docker and deploy it on a cloud platform (e.g., AWS Sagemaker, GCP Vertex AI) to establish a reliable, scheduled prediction service.
+
 
 
 
