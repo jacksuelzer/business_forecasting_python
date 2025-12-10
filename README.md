@@ -52,36 +52,36 @@ Uncertainty Estimates: Add prediction intervals (like 80% and 95%) so the busine
 I wish I could have also implemented the cross validation more fluidly throughout the model allowing me to better analyze each hotel uniquely to figure out what the best model would be for each hotel. 
 
 ### Cross Validation for Naive and Seasonal Naive
-# ---------------------------------------
-# Train/Test Split
-# ---------------------------------------
+ ---------------------------------------
+ Train/Test Split
+ ---------------------------------------
 train = hotels.query('ds < "2023-06-30"')
 
-# ---------------------------------------
-# Baseline Forecasting Models
-# ---------------------------------------
+ ---------------------------------------
+ Baseline Forecasting Models
+ ---------------------------------------
 models = [
     Naive(),
     SeasonalNaive(season_length=28, alias="monthly_seasonality"),
 ]
 
-# ---------------------------------------
-# Initialize StatsForecast
-# ---------------------------------------
+ ---------------------------------------
+ Initialize StatsForecast
+ ---------------------------------------
 sf = StatsForecast(
     models=models,
     freq="D"
 )
 
-# ---------------------------------------
-# Cross-Validation Setup
-# ---------------------------------------
-# Note:
-# Baseline statistical models do NOT use external predictors.
-# Therefore, we subset to only the required columns.
-# If you later add models that *do* take exogenous variables,
-# run CV separately for both groups (baseline vs. with-predictors).
-# ---------------------------------------
+ ---------------------------------------
+ Cross-Validation Setup
+ ---------------------------------------
+ Note:
+ Baseline statistical models do NOT use external predictors.
+ Therefore, we subset to only the required columns.
+ If you later add models that *do* take exogenous variables,
+ run CV separately for both groups (baseline vs. with-predictors).
+ ---------------------------------------
 cross_df = sf.cross_validation(
     h=30,
     df=train[["unique_id", "ds", "y"]],
@@ -92,33 +92,33 @@ cross_df = sf.cross_validation(
 display(cross_df)
 
 ### AutoETS
-# ---------------------------------------
-# Imports
-# ---------------------------------------
+ ---------------------------------------
+ Imports
+ ---------------------------------------
 from statsforecast import StatsForecast
 from statsforecast.models import AutoETS
 import pandas as pd
 from sklearn.model_selection import TimeSeriesSplit
 
-# ---------------------------------------
-# Data Preparation
-# ---------------------------------------
-# Ensure dataset is sorted by date
+ ---------------------------------------
+ Data Preparation
+ ---------------------------------------
+ Ensure dataset is sorted by date
 hotels = hotels.sort_values(by="ds").reset_index(drop=True)
 
-# Forecast horizon
+ Forecast horizon
 h = 28
 
-# TimeSeriesSplit setup
+ TimeSeriesSplit setup
 n_splits = 5
 tscv = TimeSeriesSplit(n_splits=n_splits)
 splits = list(tscv.split(hotels))
 
 autoets_predictions_per_fold = []
 
-# ---------------------------------------
-# Cross-Validation Loop
-# ---------------------------------------
+ ---------------------------------------
+ Cross-Validation Loop
+ ---------------------------------------
 for i, (train_idx, val_idx) in enumerate(splits):
     # Split into train/validation sets
     train_df = hotels.iloc[train_idx].copy()
@@ -169,9 +169,9 @@ for i, (train_idx, val_idx) in enumerate(splits):
         "predictions_df": merged
     })
 
-# ---------------------------------------
-# Output Summary
-# ---------------------------------------
+ ---------------------------------------
+ Output Summary
+ ---------------------------------------
 print(f"Generated AutoETS predictions for {len(autoets_predictions_per_fold)} folds.")
 print(f"""
 Example for Fold 1 (first 5 actual vs predicted):
@@ -180,28 +180,23 @@ Predicted: {autoets_predictions_per_fold[0]['y_pred_autoets'][:5]}
 """)
 
 ### AutoAMIRA
-# ---------------------------------------
-# Imports
-# ---------------------------------------
+ ---------------------------------------
+ Imports
+ ---------------------------------------
 from statsforecast import StatsForecast
 from statsforecast.models import AutoARIMA
 import pandas as pd
 
-# ---------------------------------------
-# Forecast Horizon
-# ---------------------------------------
+ ---------------------------------------
+ Forecast Horizon
+ ---------------------------------------
 h = 28   # predict next 28 days
 
 autoarima_predictions_per_fold = []
 
-# Note:
-# `tscv_splits` must already be defined from previous TimeSeriesSplit setup.
-# It should come from the AutoETS section.
-# ---------------------------------------
-
-# ---------------------------------------
-# Cross-Validation Loop
-# ---------------------------------------
+ ---------------------------------------
+ Cross-Validation Loop
+ ---------------------------------------
 for i, (train_idx, val_idx) in enumerate(tscv_splits):
     # Train and validation subsets
     train_df = hotels.iloc[train_idx].copy()
@@ -251,9 +246,9 @@ for i, (train_idx, val_idx) in enumerate(tscv_splits):
         "predictions_df": merged    # Store merged predictions for metrics/analysis
     })
 
-# ---------------------------------------
-# Output Summary
-# ---------------------------------------
+ ---------------------------------------
+ Output Summary
+ ---------------------------------------
 print(f"Generated AutoARIMA predictions for {len(autoarima_predictions_per_fold)} folds.")
 print(f"""
 Example for Fold 1 (first 5 actual vs predicted):
@@ -262,27 +257,27 @@ Predicted: {autoarima_predictions_per_fold[0]['y_pred_autoarima'][:5]}
 """)
 
 ### LightGBM
-# ---------------------------------------
-# Imports
-# ---------------------------------------
+ ---------------------------------------
+ Imports
+ ---------------------------------------
 from mlforecast import MLForecast
 from lightgbm import LGBMRegressor
 import pandas as pd
 import numpy as np
 
-# ---------------------------------------
-# Forecast Horizon
-# ---------------------------------------
+ ---------------------------------------
+ Forecast Horizon
+ ---------------------------------------
 h = 28   # predict next 28 days
 
 lgbm_predictions_per_fold = []
 
-# Date features automatically extracted by MLForecast
+ Date features automatically extracted by MLForecast
 date_features = ['dayofweek', 'dayofyear', 'week', 'month', 'year']
 
-# ---------------------------------------
-# Cross-Validation Loop
-# ---------------------------------------
+ ---------------------------------------
+ Cross-Validation Loop
+ ---------------------------------------
 for i, (train_idx, val_idx) in enumerate(tscv_splits):
     
     # Train and validation splits from expanded exogenous dataset
@@ -369,9 +364,9 @@ for i, (train_idx, val_idx) in enumerate(tscv_splits):
         "y_pred_lgbm": y_pred_list
     })
 
-# ---------------------------------------
-# Output Summary
-# ---------------------------------------
+ ---------------------------------------
+ Output Summary
+ ---------------------------------------
 print(f"Generated LGBM predictions for {len(lgbm_predictions_per_fold)} folds.")
 
 if lgbm_predictions_per_fold:
@@ -384,23 +379,23 @@ else:
     print("No predictions generated for any fold.")
 
 ### AutoNBEATS
-# ---------------------------------------
-# Imports
-# ---------------------------------------
+ ---------------------------------------
+ Imports
+ ---------------------------------------
 from neuralforecast import NeuralForecast
 from neuralforecast.models import NBEATS
 import pandas as pd
 
-# ---------------------------------------
-# Forecast Horizon
-# ---------------------------------------
+ ---------------------------------------
+ Forecast Horizon
+ ---------------------------------------
 h = 28   # predict next 28 days
 
 nbeats_predictions_per_fold = []
 
-# ---------------------------------------
-# Cross-Validation Loop
-# ---------------------------------------
+ ---------------------------------------
+ Cross-Validation Loop
+ ---------------------------------------
 for i, (train_idx, val_idx) in enumerate(tscv_splits):
     
     # Train/validation splits from the NBEATS-ready dataset
@@ -463,9 +458,9 @@ for i, (train_idx, val_idx) in enumerate(tscv_splits):
         "y_pred_nbeats": y_pred_list
     })
 
-# ---------------------------------------
-# Output Summary
-# ---------------------------------------
+ ---------------------------------------
+ Output Summary
+ ---------------------------------------
 print(f"Generated NBEATS predictions for {len(nbeats_predictions_per_fold)} folds.")
 print(f"""
 Example for Fold 1 (first 5 actual vs predicted):
@@ -475,23 +470,23 @@ Predicted: {nbeats_predictions_per_fold[0]['y_pred_nbeats'][:5]}
 
 
 ### AutoNHITS
-# ---------------------------------------
-# Imports
-# ---------------------------------------
+ ---------------------------------------
+ Imports
+ ---------------------------------------
 from neuralforecast import NeuralForecast
 from neuralforecast.models import NHITS
 import pandas as pd
 
-# ---------------------------------------
-# Forecast Horizon
-# ---------------------------------------
+ ---------------------------------------
+ Forecast Horizon
+ ---------------------------------------
 h = 28   # predict next 28 days
 
 nhits_predictions_per_fold = []
 
-# ---------------------------------------
-# Cross-Validation Loop
-# ---------------------------------------
+ ---------------------------------------
+ Cross-Validation Loop
+ ---------------------------------------
 for i, (train_idx, val_idx) in enumerate(tscv_splits):
 
     # Training and validation subsets
@@ -552,9 +547,9 @@ for i, (train_idx, val_idx) in enumerate(tscv_splits):
         "y_pred_nhits": y_pred_list
     })
 
-# ---------------------------------------
-# Output Summary
-# ---------------------------------------
+ ---------------------------------------
+ Output Summary
+ ---------------------------------------
 print(f"Generated NHITS predictions for {len(nhits_predictions_per_fold)} folds.")
 print(f"""
 Example for Fold 1 (first 5 actual vs predicted):
@@ -564,32 +559,32 @@ Predicted: {nhits_predictions_per_fold[0]['y_pred_nhits'][:5]}
 
 
 ### TimeGPT
-# ---------------------------------------
-# Imports
-# ---------------------------------------
+ ---------------------------------------
+ Imports
+ ---------------------------------------
 import pandas as pd
 import numpy as np
 from nixtla import NixtlaClient
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-# ---------------------------------------
-# TimeGPT Client Initialization
-# ---------------------------------------
-# nixtla_client = NixtlaClient(api_key="YOUR_API_KEY")
-# Assumes `nixtla_client` is already authenticated in the environment.
+ ---------------------------------------
+ TimeGPT Client Initialization
+ ---------------------------------------
+ nixtla_client = NixtlaClient(api_key="YOUR_API_KEY")
+ Assumes `nixtla_client` is already authenticated in the environment.
 
-# ---------------------------------------
-# Cross-Validation Parameters
-# ---------------------------------------
-H_HORIZON = 7          # forecast horizon per fold (7-day backtest)
+ ---------------------------------------
+ Cross-Validation Parameters
+ ---------------------------------------
+H_HORIZON = 28         # forecast horizon per fold (7-day backtest)
 LAG_SIZE = 0           # no gap between train/validation
 NUM_FOLDS = 5          # match 5-fold CV setup
 
-print("Starting TimeGPT Cross-Validation to calculate RMSE, MAE, ME, and SMAPE...")
+print("Starting TimeGPT Cross-Validation to calculate RMSE, MAE, and SMAPE...")
 
-# ---------------------------------------
-# Run TimeGPT Rolling Cross-Validation
-# ---------------------------------------
+ ---------------------------------------
+ Run TimeGPT Rolling Cross-Validation
+ ---------------------------------------
 timegpt_cv_results = nixtla_client.cross_validation(
     df=hotels_prepared,   # must contain: unique_id, ds (datetime), y
     h=H_HORIZON,
@@ -600,9 +595,9 @@ timegpt_cv_results = nixtla_client.cross_validation(
     target_col="y"
 )
 
-# ---------------------------------------
-# SMAPE Calculation Function
-# ---------------------------------------
+ ---------------------------------------
+ SMAPE Calculation Function
+ ---------------------------------------
 def smape(y_true, y_pred):
     numerator = np.abs(y_pred - y_true)
     denominator = (np.abs(y_true) + np.abs(y_pred)) / 2
@@ -613,9 +608,9 @@ def smape(y_true, y_pred):
     ) * 100
 
 
-# ---------------------------------------
-# Compute Metrics for Each Fold
-# ---------------------------------------
+ ---------------------------------------
+ Compute Metrics for Each Fold
+ ---------------------------------------
 metrics_per_fold = []
 
 for cutoff, fold_df in timegpt_cv_results.groupby("cutoff"):
@@ -624,34 +619,27 @@ for cutoff, fold_df in timegpt_cv_results.groupby("cutoff"):
 
     rmse = np.sqrt(mean_squared_error(y_true, y_pred))
     mae = mean_absolute_error(y_true, y_pred)
-    me = np.mean(y_pred - y_true)
     smape_val = smape(y_true, y_pred)
 
     metrics_per_fold.append({
         "fold": cutoff,
         "RMSE": rmse,
         "MAE": mae,
-        "ME": me,
+        
         "SMAPE": smape_val
     })
 
-
-# ---------------------------------------
-# Average Metrics Across Folds
-# ---------------------------------------
+ Average Metrics Across Folds
+ ---------------------------------------
 avg_rmse = np.mean([m["RMSE"] for m in metrics_per_fold])
 avg_mae = np.mean([m["MAE"] for m in metrics_per_fold])
-avg_me = np.mean([m["ME"] for m in metrics_per_fold])
 avg_smape = np.mean([m["SMAPE"] for m in metrics_per_fold])
 
-# ---------------------------------------
+
 # Output Summary
-# ---------------------------------------
-print("✅ TimeGPT Backtesting Complete.\n")
 print("TimeGPT Performance Metrics (Averaged Across 5 Folds):")
 print(f"Average RMSE:  {avg_rmse:.4f}")
 print(f"Average MAE:   {avg_mae:.4f}")
-print(f"Average ME:    {avg_me:.4f}")
 print(f"Average SMAPE: {avg_smape:.4f}%")
 
 
