@@ -51,7 +51,7 @@ Uncertainty Estimates: Add prediction intervals (like 80% and 95%) so the busine
 
 I wish I could have also implemented the cross validation more fluidly throughout the model allowing me to better analyze each hotel uniquely to figure out what the best model would be for each hotel. 
 
-### Cross Validation for Naive and Seasonal Naive
+## Cross Validation for Naive and Seasonal Naive
  ---------------------------------------
  Train/Test Split
  ---------------------------------------
@@ -91,7 +91,7 @@ cross_df = sf.cross_validation(
 
 display(cross_df)
 
-### AutoETS
+## AutoETS
  ---------------------------------------
  Imports
  ---------------------------------------
@@ -179,7 +179,7 @@ Actual:    {autoets_predictions_per_fold[0]['y_true'][:5]}
 Predicted: {autoets_predictions_per_fold[0]['y_pred_autoets'][:5]}
 """)
 
-### AutoAMIRA
+## AutoAMIRA
  ---------------------------------------
  Imports
  ---------------------------------------
@@ -256,7 +256,7 @@ Actual:    {autoarima_predictions_per_fold[0]['y_true'][:5]}
 Predicted: {autoarima_predictions_per_fold[0]['y_pred_autoarima'][:5]}
 """)
 
-### LightGBM
+## LightGBM
  ---------------------------------------
  Imports
  ---------------------------------------
@@ -378,7 +378,7 @@ Predicted: {lgbm_predictions_per_fold[0]['y_pred_lgbm'][:5]}
 else:
     print("No predictions generated for any fold.")
 
-### AutoNBEATS
+## AutoNBEATS
  ---------------------------------------
  Imports
  ---------------------------------------
@@ -469,7 +469,7 @@ Predicted: {nbeats_predictions_per_fold[0]['y_pred_nbeats'][:5]}
 """)
 
 
-### AutoNHITS
+## AutoNHITS
  ---------------------------------------
  Imports
  ---------------------------------------
@@ -558,7 +558,7 @@ Predicted: {nhits_predictions_per_fold[0]['y_pred_nhits'][:5]}
 """)
 
 
-### TimeGPT
+## TimeGPT
  ---------------------------------------
  Imports
  ---------------------------------------
