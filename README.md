@@ -20,48 +20,36 @@ The Python Notebook containing my code, results, and insights is available at: [
 
 ## Business Insights
 
-This project implements a comprehensive comparative study of state-of-the-art time series forecasting models, addressing the critical need for accurate planning in a highly dynamic business environment. The goal is to benchmark advanced techniques—including Deep Learning, Statistical, and classical Machine Learning—against each other to identify the optimal model for predicting future demand (or other key metric) and optimizing resource allocation or inventory holding costs.
+This project compares a bunch of modern time series forecasting models to figure out which one actually works best in a fast-changing business setting. The main goal was to test different approaches—Deep Learning, traditional statistical models, and classic Machine Learning—to see which one gives the most accurate predictions for things like future demand, inventory needs, or other key metrics.
 
-Based on a rigorous cross-validation and evaluation using metrics such as Mean Absolute Error (MAE) and Root Mean Square Error (RMSE), the following insights guide the recommendation for production deployment:
+After running cross-validation and evaluating everything using metrics like MAE and RMSE, here’s what stood out:
 
-1. Advanced Deep Learning is the Recommended Solution
-Recommendation: Models like TimeGPT, NHITS, and NBEATS (Deep Learning) consistently delivered the lowest forecast errors and demonstrated superior ability to handle complex seasonality, trends, and regime shifts present in the data.
+Deep Learning Models Perform the Best
 
-Actionable Impact: Deploying the leading model, TimeGPT, directly translating to more accurate ordering, less excess inventory, and improved operational efficiency.
+Finding: Models like TimeGPT, NHITS, and NBEATS consistently had the lowest errors. They handled complicated patterns in the data—like multiple seasonalities and sudden shifts—much better than the other methods.
+Why It Matters: Using the top model (TimeGPT) in production would likely lead to better demand planning, fewer stockouts, less excess inventory, and overall smoother operations.
 
-2. Statistical Models as a High-Reliability Fallback
-Finding: Traditional models, specifically AutoETS and AutoARIMA, offer robust, transparent, and interpretable forecasts. They provide solid performance and often come close to the accuracy of deep learning methods on series with clear underlying patterns.
+Statistical Models Are a Solid Backup Option
 
-Use Case: These models are excellent candidates for a low-latency deployment layer or as a reliable fallback mechanism in production, ensuring the business always has a stable forecast, even in a system failure scenario.
+Finding: Models such as AutoETS and AutoARIMA were surprisingly strong. They’re interpretable and reliable, and in some cases, they weren’t far behind Deep Learning models—especially when the data had clear patterns.
+Use Case: These models are perfect for situations where you need low latency or want a dependable fallback model if the main system goes down.
 
-3. The Feature Engineering Challenge for ML Models
-Observation: The LightGBM model's performance was significantly hindered when only basic date features were used. Its results lagged behind both the deep learning and well-tuned statistical models.
+Machine Learning Models Need Better Features
 
-Strategic Direction: For future improvements using tree-based methods, the business must prioritize investing in collecting and integrating external data (e.g., promotional calendars, macroeconomic data, competitor pricing) to create the necessary predictive features that drive Machine Learning model performance.
+Finding: The LightGBM model didn’t perform as well, mostly because it only used basic date features. Without richer inputs, it couldn’t keep up with the deep learning or statistical models.
+What This Means: To make tree-based ML models competitive, the business needs to invest in better feature engineering—things like adding promotional schedules, economic indicators, competitor pricing, and holiday/event flags. ML models depend heavily on good features, so domain knowledge becomes essential.
 
-To make a Machine Learning model competitive in this domain, it is essential to incorporate richer exogenous variables (e.g., external economic indicators, marketing spend, holiday/event flags). This underscores that success with tree-based models relies heavily on domain expertise and creating predictive features.
+Key Packages Used: pandas, numpy, matplotlib / seaborn / plotly, statsmodels, neuralforecast / lightgbm
 
+## Future Work & Next Steps
 
-Key Packages Used:
+To move this from a prototype to something that can run in production, here are the recommended next steps:
 
-pandas
+Error Analysis & Explainability: Look closely at the time series where all models struggled. This helps identify outliers, missing variables, or unexpected events that weren’t captured.
 
-numpy
+Uncertainty Estimates: Add prediction intervals (like 80% and 95%) so the business can understand the risk around each forecast—not just the point prediction.
 
-matplotlib / seaborn / plotly
-
-statsmodels (for statistical models)
-
-neuralforecast / lightgbm (for Deep Learning and ML models)
-
-## Future Work and Next Steps
-The following steps are recommended to transition this proof-of-concept into a production-ready forecasting system:
-
-Error Analysis and Explainability: Conduct a deep dive into the specific time series where even the best models performed poorly to understand the underlying drivers (e.g., outliers, unmodeled events).
-
-Uncertainty Quantification: Implement prediction intervals (e.g., 80% and 95% confidence intervals) to provide the business with a clear range of outcomes, enabling better risk-aware decision-making.
-
-Cloud Deployment: Containerize the final model using Docker and deploy it on a cloud platform (e.g., AWS Sagemaker, GCP Vertex AI) to establish a reliable, scheduled prediction service.
+I wish I could have also implemented the cross validation more fluidly throughout the model allowing me to better analyze each hotel uniquely to figure out what the best model would be for each hotel. 
 
 
 
